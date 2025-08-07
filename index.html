@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kelly's Interactive CV</title>
+  <style>
+    /* Reset & Base Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Courier New', monospace;
+      background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 100%);
+      color: #00ff41;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .container {
+      display: flex;
+      width: 95%;
+      height: 90vh;
+      border: 2px solid #00ff41;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 0 30px rgba(0, 255, 65, 0.3);
+      backdrop-filter: blur(10px);
+    }
+
+    /* Left Panel */
+    .left-panel {
+      width: 35%;
+      background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      border-right: 2px solid #00ff41;
+    }
+
+    /* Improved Chain System */
+    .chain-container {
+      position: absolute;
+      top: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: chainDrop 2.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+
+    .chain {
+      width: 6px;
+      height: 120px;
+      background: repeating-linear-gradient(
+        to bottom,
+        #666 0px,
+        #666 6px,
+        #999 6px,
+        #999 8px,
+        #666 8px,
+        #666 12px,
+        transparent 12px,
+        transparent 14px
+      );
+      border-radius: 3px;
+      position: relative;
+      transform-origin: top center;
+      box-shadow: inset 0 0 4px rgba(0,0,0,0.5), 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    /* Chain Hook/Connector */
+    .chain::before {
+      content: '';
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 12px;
+      height: 8px;
+      background: #888;
+      border-radius: 50% 50% 0 0;
+      border: 2px solid #666;
+    }
+
+    /* Connected Frame System */
+    .frame-connector {
+      position: relative;
+      animation: pendulumSwing 4s ease-in-out infinite 2.5s;
+      transform-origin: top center;
+    }
+
+    /* Small connecting link between chain and frame */
+    .connecting-link {
+      width: 8px;
+      height: 8px;
+      background: #888;
+      border-radius: 50%;
+      margin: 0 auto 5px;
+      border: 2px solid #666;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .frame {
+      width: 180px;
+      height: 180px;
+      border: 4px solid #00ff41;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(0, 255, 65, 0.4), 0 8px 16px rgba(0,0,0,0.3);
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    /* Realistic drop physics */
+    @keyframes chainDrop {
+      0% {
+        transform: translateY(-400px) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      60% {
+        transform: translateY(10px) rotate(2deg);
+      }
+      75% {
+        transform: translateY(-5px) rotate(-1deg);
+      }
+      85% {
+        transform: translateY(3px) rotate(0.5deg);
+      }
+      92% {
+        transform: translateY(-1px) rotate(-0.2deg);
+      }
+      100% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+    }
+
+    /* Pendulum swinging animation */
+    @keyframes pendulumSwing {
+      0%, 100% { 
+        transform: rotate(0deg);
+      }
+      25% { 
+        transform: rotate(4deg);
+      }
+      75% { 
+        transform: rotate(-4deg);
+      }
+    }
+
+    /* Chain subtle sway to match the pendulum */
+    @keyframes chainSway {
+      0%, 100% { 
+        transform: rotate(0deg);
+      }
+      25% { 
+        transform: rotate(2deg);
+      }
+      75% { 
+        transform: rotate(-2deg);
+      }
+    }
+
+    .chain {
+      animation: chainSway 4s ease-in-out infinite 2.5s;
+    }
+
+    .profile-pic {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 16px;
+    }
+
+    .profile-placeholder {
+      width: 80%;
+      height: 80%;
+      background: linear-gradient(45deg, #00ff41, #0080ff);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      font-weight: bold;
+      color: #000;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .social-links {
+      position: absolute;
+      bottom: 30px;
+      display: flex;
+      gap: 15px;
+    }
+
+    .social-link {
+      padding: 8px 12px;
+      background: rgba(0, 255, 65, 0.1);
+      border: 1px solid #00ff41;
+      border-radius: 5px;
+      color: #00ff41;
+      text-decoration: none;
+      font-size: 12px;
+      transition: all 0.3s ease;
+    }
+
+    .social-link:hover {
+      background: rgba(0, 255, 65, 0.2);
+      box-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+      transform: translateY(-2px);
+    }
+
+    /* Right Panel (Terminal) */
+    .right-panel {
+      width: 65%;
+      background: #000;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .terminal-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #00ff41;
+    }
+
+    .terminal-buttons {
+      display: flex;
+      gap: 8px;
+      margin-right: auto;
+    }
+
+    .btn {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .btn.red { background: #ff5f56; }
+    .btn.yellow { background: #ffbd2e; }
+    .btn.green { background: #27ca3f; }
+
+    .terminal-title {
+      color: #00ff41;
+      font-size: 14px;
+      margin: 0 auto;
+    }
+
+    .terminal {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: rgba(0, 0, 0, 0.8);
+      border-radius: 8px;
+      padding: 1rem;
+      border: 1px solid rgba(0, 255, 65, 0.3);
+    }
+
+    .output {
+      flex: 1;
+      overflow-y: auto;
+      margin-bottom: 1rem;
+      max-height: calc(90vh - 200px);
+    }
+
+    .output p {
+      line-height: 1.6;
+      color: #00ff41;
+      margin-bottom: 0.5rem;
+      animation: typewriter 0.5s ease-in;
+    }
+
+    .output p.user-input {
+      color: #0080ff;
+    }
+
+    .output p.error {
+      color: #ff4444;
+    }
+
+    .output p.success {
+      color: #44ff44;
+    }
+
+    .menu {
+      background: rgba(0, 255, 65, 0.1);
+      padding: 1rem;
+      border-radius: 8px;
+      margin: 1rem 0;
+      border-left: 4px solid #00ff41;
+    }
+
+    .menu-item {
+      cursor: pointer;
+      padding: 0.3rem 0;
+      transition: all 0.2s ease;
+    }
+
+    .menu-item:hover {
+      color: #44ff44;
+      padding-left: 10px;
+    }
+
+    .input-line {
+      display: flex;
+      align-items: center;
+      background: rgba(0, 255, 65, 0.05);
+      padding: 0.5rem;
+      border-radius: 4px;
+      border: 1px solid rgba(0, 255, 65, 0.3);
+    }
+
+    .prompt {
+      margin-right: 8px;
+      color: #00ff41;
+      font-weight: bold;
+    }
+
+    #terminal-input {
+      background: transparent;
+      border: none;
+      color: #00ff41;
+      font-family: 'Courier New', monospace;
+      font-size: 1rem;
+      outline: none;
+      flex-grow: 1;
+      caret-color: #00ff41;
+    }
+
+    .cursor {
+      display: inline-block;
+      background-color: #00ff41;
+      width: 2px;
+      height: 1.2em;
+      animation: blink 1s infinite;
+      margin-left: 2px;
+    }
+
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+
+    @keyframes typewriter {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Command suggestions */
+    .suggestions {
+      position: absolute;
+      bottom: 100px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.9);
+      border: 1px solid #00ff41;
+      border-radius: 5px;
+      padding: 10px;
+      display: none;
+    }
+
+    .suggestion {
+      color: #888;
+      font-size: 12px;
+      margin: 2px 0;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        height: 95vh;
+      }
+
+      .left-panel {
+        width: 100%;
+        height: 40%;
+      }
+
+      .right-panel {
+        width: 100%;
+        height: 60%;
+        padding: 1rem;
+      }
+
+      .frame {
+        width: 120px;
+        height: 120px;
+      }
+
+      .chain {
+        height: 80px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="left-panel">
+      <div class="chain-container">
+        <div class="chain"></div>
+        <div class="frame-connector">
+          <div class="connecting-link"></div>
+          <div class="frame">
+            <img src="your-image.png" alt="Kelly" class="profile-pic" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+            <div class="profile-placeholder" style="display: none;">K</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="social-links">
+        <a href="https://github.com/maroaoga" class="social-link">GitHub</a>
+        <a href="https://www.linkedin.com/in/kelvin-odhiambo-45587a1b3/" class="social-link">LinkedIn</a>
+        <a href="kelvinolang3@gmail.com" class="social-link">Email</a>
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <div class="terminal-header">
+        <div class="terminal-buttons">
+          <div class="btn red"></div>
+          <div class="btn yellow"></div>
+          <div class="btn green"></div>
+        </div>
+        <div class="terminal-title">kelly@portfolio:~$</div>
+      </div>
+
+      <div class="terminal">
+        <div class="output" id="terminal-output">
+          <p>> Initializing Kelly's Interactive CV...</p>
+          <p>> System ready.</p>
+          <p>> ========================================</p>
+          <p>> Welcome to my interactive portfolio!</p>
+          <p>> ========================================</p>
+          
+          <div class="menu">
+            <p><strong>Main Menu:</strong></p>
+            <div class="menu-item">> 1. About Me - Who I am and what I do</div>
+            <div class="menu-item">> 2. Experience - My professional journey</div>
+            <div class="menu-item">> 3. Education - Academic background</div>
+            <div class="menu-item">> 4. Projects - Things I've built</div>
+            <div class="menu-item">> 5. Skills - Technologies I work with</div>
+            <div class="menu-item">> 6. Contact - Get in touch</div>
+            <div class="menu-item">> 7. Fun Facts - Random stuff about me</div>
+            <div class="menu-item">> help - Show available commands</div>
+            <div class="menu-item">> clear - Clear terminal</div>
+          </div>
+          
+          <p>> Enter a command and press ENTER:</p>
+        </div>
+        
+        <div class="input-line">
+          <span class="prompt">kelly@portfolio:~$</span>
+          <input type="text" id="terminal-input" autofocus />
+          <span class="cursor"></span>
+        </div>
+      </div>
+
+      <div class="suggestions" id="suggestions">
+        <div class="suggestion">Try: about, experience, projects</div>
+        <div class="suggestion">Type 'help' for all commands</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const input = document.getElementById("terminal-input");
+      const output = document.getElementById("terminal-output");
+      const suggestions = document.getElementById("suggestions");
+
+      let commandHistory = [];
+      let historyIndex = -1;
+
+      const sections = {
+        "1": {
+          title: "About Me",
+          content: [
+            "Hello! I'm Kelly Odhiambo, a versatile and passionate Software Engineer based in Nairobi, Kenya.",
+            "I specialize in building scalable applications and crafting interactive, user-centered solutions.",
+            "With a strong foundation in full-stack development, I bring extensive experience in Java, Python, PHP, and JavaScript.",
+            "Beyond coding, I have a keen interest in Artificial Intelligence, Machine Learning, and Cybersecurity,",
+            "which allows me to engineer smart, secure, and future-ready software systems.",
+            "Over the years, I've delivered solutions that improve performance, reduce deployment time, and enhance user experience.",
+            "I'm also committed to continuous learning, innovation, and solving complex problems through code.",
+            "Whether it's refining existing systems or architecting new ones, I take pride in writing clean, efficient, and maintainable code."
+          ]
+
+        },
+        "2": {
+          title: "Experience",
+          content: [
+
+          "Internship – Trans-Nzoia County Government, Kitale, Kenya (Jan 2024 – Jun 2024)",
+  
+          "• Supported ICT operations including system upgrades and troubleshooting.",
+  
+          "• Assisted with software installations, database management, and digital documentation.",
+ 
+          "• Contributed to improving digital infrastructure and efficiency of county systems.",
+ 
+          "",
+  
+          "ICT Attachee – Trans-Nzoia County Government, Kitale, Kenya (May 2022 – Sep 2022)",
+  
+          "• Participated in website design and system enhancement projects for county services.",
+ 
+          "• Processed documentation, supported users, and contributed ideas to improve performance.",
+  
+          "• Engaged in customer support and staff training, boosting internal ICT capacity.",
+  
+          "",
+  
+          "Freelance Software Engineer – Remote (2023 – Present)",
+  
+          "• Designed and deployed web and mobile applications across various industries.",
+ 
+          "• Built a smart AI assistant for managing professional football players' training, diet, and match schedules.",
+ 
+          "• Developed a beat-generation website for music producers, utilizing randomness and real-time sound libraries.",
+  
+          "• Delivered machine learning solutions for data analysis and intelligent automation using Python and R.",
+  
+          "• Built full-stack applications (PHP, JS, Laravel, MySQL) and dashboards with clean UI/UX.",
+  
+          "• Handled requirements gathering, coding, testing, deployment, and client handoff independently.",
+  
+          "• Collaborated with international clients via Fiverr and direct referrals, managing multiple projects end-to-end."
+        ]
+
+        },
+        "3": {
+        title: "Education",
+
+        content: [
+  
+        "Bachelor of Science in Computer Science",
+  
+        "Kisii University – Kenya (2019 – 2023)",
+  
+        "• Graduated: December 2023",
+  
+        "• Relevant Coursework: Software Engineering, Data Structures, Web Development, Machine Learning",
+  
+        "• Final Year Projects: Intelligent Web Systems, AI Automation Tools",
+ 
+        "",
+  
+        "Kenya Certificate of Secondary Education (KCSE)",
+  
+        "St. Joseph High School, Kitale (2014 – 2017)",
+  
+        "• Mean Grade: B Plain",
+  
+        "",
+ 
+        "Kenya Certificate of Primary Education (KCPE)",
+  
+        "St. Clevers Victonel Primary School (Completed 2012)",
+  
+        "• Score: 361 Marks"
+
+      ]
+
+        },
+        "4": {
+         title: "Projects",
+
+         content: [
+  
+         "1. AI Manager for Professional Footballers",
+  
+         "• Developed an AI-powered system to assist footballers in planning training sessions, diet, and match schedules.",
+ 
+         "• Integrated natural language understanding and machine learning models for personalized recommendations.",
+  
+         "• Used Python, Flask, and custom-trained models to deliver real-time insights.",
+  
+         "",
+ 
+         "2. Beat Generator Web Application",
+ 
+         "• Created a dynamic website that randomly generates music beats for producers.",
+ 
+         "• Combined audio libraries, user interactions, and randomness for creative inspiration.",
+ 
+         "• Built with HTML, CSS, JavaScript, and Web Audio API.",
+  
+         "",
+ 
+         "3. Data Analysis Pipelines (Freelance Projects)",
+ 
+         "• Conducted statistical and predictive analysis using Python (Pandas, Scikit-learn) and R.",
+  
+         "• Delivered reports, dashboards, and models for client decision-making.",
+  
+         "• Common use cases included business analytics, forecasting, and data cleaning.",
+  
+         "",
+  
+         "4. Full-Stack Business Applications",
+  
+         "• Built client-facing systems with login, admin panels, dashboards, and APIs.",
+ 
+         "• Used PHP (Laravel), MySQL, JavaScript, and REST architecture.",
+ 
+         "• Deployed on shared and cloud servers with documentation and training for end users.",
+  
+         "",
+  
+         "5. Interactive CV Portfolio (This Site)",
+ 
+         "• Designed and coded a responsive, terminal-style interactive CV from scratch.",
+  
+         "• Features custom animations, fake command-line input, and dynamic content.",
+  
+         "• Created using vanilla HTML, CSS, and JavaScript, with a focus on UX and creativity."
+
+        ]
+
+        },
+        "5": {
+          title: "Skills",
+          content: [
+            "Programming Languages:",
+            "• Python, JavaScript (ES6+), Java, C, C++, PHP, R",
+             "",
+             "Frontend Development:",
+             "• HTML5, CSS3, JavaScript, Bootstrap, Tailwind CSS",
+             "",
+             "Backend & Full-Stack:",
+             "• Laravel (PHP), Node.js, Express, Django, REST APIs",
+              "",
+              "Databases:",
+              "• MySQL, PostgreSQL, MongoDB, SQL",
+              "",
+              "AI & Machine Learning:",
+               "• Scikit-learn, TensorFlow (basic), Data analysis in Python & R",
+               "",
+               "Tools & Platforms:",
+                "• Git, Docker, Figma, Firebase, VS Code, Postman",
+                "",
+                "Other Skills:",
+                "• Debugging, Code review, Agile/Scrum workflows, Technical documentation",
+                 "",
+                 "Soft Skills:",
+                 "• Problem solving, Communication, Team collaboration, Self-learning, Client communication"
+                ]
+
+        },
+        "6": {
+          title: "Contact Information",
+          content: [
+            "Let's connect! Here's how you can reach me:",
+            "",
+            "📧 Email: kelvinolang3@gmail.com",
+            "🔗 LinkedIn: https://www.linkedin.com/in/kelvin-odhiambo-45587a1b3/",
+            "🐙 GitHub: https://github.com/maroaoga",
+            "🌐 Portfolio: kelly-portfolio.com",
+            "",
+            "I'm always open to discussing new opportunities and interesting projects!"
+          ]
+        },
+        "7": {
+          title: "Fun Facts",
+          title: "Fun Facts",
+
+          content: [
+  
+          "Here are a few things you probably wouldn't guess about me:",
+ 
+          "",
+  
+          "🎧 I built a beat-generating website — because music and code make a great combo.",
+  
+          "⚽ I’m a huge football fan and even built an AI to manage professional players’ routines.",
+  
+          "🤖 I like building smart things — from chatbots to data-driven dashboards.",
+ 
+          "💡 I once taught myself an entire tech stack over a weekend to meet a freelance deadline (and delivered!).",
+  
+          "🔐 I'm fascinated by cybersecurity — ethical hacking videos are my version of Netflix.",
+  
+          "📚 I’m a self-taught learner: AI, machine learning, web dev — bring it on.",
+  
+          "☕ I run on tea, late-night code, and client deadlines.",
+  
+          "🌍 I’ve worked with clients from around the world through freelancing.",
+  
+          "🎯 I believe tech should solve real-world problems — and be fun doing it."
+
+        ]
+
+        }
+      };
+
+      const commands = {
+        "help": () => showHelp(),
+        "clear": () => clearTerminal(),
+        "about": () => sections["1"],
+        "experience": () => sections["2"],
+        "education": () => sections["3"],
+        "projects": () => sections["4"],
+        "skills": () => sections["5"],
+        "contact": () => sections["6"],
+        "fun": () => sections["7"],
+        "whoami": () => ({
+          title: "Current User",
+          content: ["kelly@portfolio - Interactive CV v2.0", "Access Level: Visitor", "Status: Exploring portfolio"]
+        }),
+        "date": () => ({
+          title: "System Time",
+          content: [new Date().toString()]
+        }),
+        "pwd": () => ({
+          title: "Current Directory",
+          content: ["/home/kelly/portfolio/cv"]
+        })
+      };
+
+      function typewriterEffect(element, text, callback) {
+        let i = 0;
+        element.innerHTML = "";
+        const timer = setInterval(() => {
+          if (i < text.length) {
+            element.innerHTML += text.charAt(i);
+            i++;
+          } else {
+            clearInterval(timer);
+            if (callback) callback();
+          }
+        }, 20);
+      }
+
+      function addToOutput(content, className = "") {
+        const p = document.createElement("p");
+        if (className) p.className = className;
+        
+        if (typeof content === 'string') {
+          p.textContent = content;
+        } else {
+          p.appendChild(content);
+        }
+        
+        output.appendChild(p);
+        output.scrollTop = output.scrollHeight;
+        return p;
+      }
+
+      function showSection(section) {
+        if (section.title) {
+          addToOutput(`> ${section.title}`, "success");
+          addToOutput(">" + "=".repeat(section.title.length + 2));
+        }
+        
+        section.content.forEach(line => {
+          addToOutput(`> ${line}`);
+        });
+        addToOutput("");
+      }
+
+      function showHelp() {
+        const helpContent = {
+          title: "Available Commands",
+          content: [
+            "Navigation Commands:",
+            "• 1 or 'about' - Learn about me",
+            "• 2 or 'experience' - My work history",
+            "• 3 or 'education' - Academic background",
+            "• 4 or 'projects' - Things I've built",
+            "• 5 or 'skills' - Technical skills",
+            "• 6 or 'contact' - Get in touch",
+            "• 7 or 'fun' - Fun facts about me",
+            "",
+            "System Commands:",
+            "• help - Show this help menu",
+            "• clear - Clear the terminal",
+            "• whoami - Show current user info",
+            "• date - Show current date/time",
+            "• pwd - Show current directory"
+          ]
+        };
+        return helpContent;
+      }
+
+      function clearTerminal() {
+        output.innerHTML = `
+          <p>> Terminal cleared.</p>
+          <p>> Welcome back to Kelly's Interactive CV!</p>
+          <p>> Type 'help' to see available commands.</p>
+        `;
+      }
+
+      function processCommand(cmd) {
+        const cleanCmd = cmd.toLowerCase().trim();
+        
+        // Add user input to output
+        addToOutput(`kelly@portfolio:~$ ${cmd}`, "user-input");
+        
+        // Check if it's a number command
+        if (sections[cleanCmd]) {
+          showSection(sections[cleanCmd]);
+          return;
+        }
+        
+        // Check if it's a text command
+        if (commands[cleanCmd]) {
+          const result = commands[cleanCmd]();
+          if (result) {
+            showSection(result);
+          }
+          return;
+        }
+        
+        // Handle aliases
+        const aliases = {
+          "exp": "experience",
+          "edu": "education",
+          "proj": "projects",
+          "skill": "skills",
+          "cont": "contact"
+        };
+        
+        if (aliases[cleanCmd] && commands[aliases[cleanCmd]]) {
+          const result = commands[aliases[cleanCmd]]();
+          showSection(result);
+          return;
+        }
+        
+        // Command not found
+        addToOutput(`> Command not found: '${cmd}'`, "error");
+        addToOutput("> Type 'help' to see available commands.", "error");
+        addToOutput("");
+      }
+
+      // Input event listeners
+      input.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+          const value = input.value.trim();
+          if (value) {
+            commandHistory.unshift(value);
+            processCommand(value);
+          }
+          input.value = "";
+          historyIndex = -1;
+        } else if (e.key === "ArrowUp") {
+          e.preventDefault();
+          if (historyIndex < commandHistory.length - 1) {
+            historyIndex++;
+            input.value = commandHistory[historyIndex];
+          }
+        } else if (e.key === "ArrowDown") {
+          e.preventDefault();
+          if (historyIndex > 0) {
+            historyIndex--;
+            input.value = commandHistory[historyIndex];
+          } else if (historyIndex === 0) {
+            historyIndex = -1;
+            input.value = "";
+          }
+        }
+      });
+
+      // Show suggestions on focus
+      input.addEventListener("focus", () => {
+        suggestions.style.display = "block";
+        setTimeout(() => {
+          suggestions.style.display = "none";
+        }, 3000);
+      });
+
+      // Click anywhere to focus input
+      document.addEventListener("click", (e) => {
+        if (e.target !== input) {
+          input.focus();
+        }
+      });
+
+      // Menu item click handlers
+      document.querySelectorAll('.menu-item').forEach(item => {
+        item.addEventListener('click', () => {
+          const text = item.textContent.trim();
+          const match = text.match(/^> (\d+|help|clear)\./);
+          if (match) {
+            input.value = match[1];
+            processCommand(match[1]);
+            input.value = "";
+          }
+        });
+      });
+
+      // Initial focus
+      input.focus();
+    });
+  </script>
+</body>
+</html>
